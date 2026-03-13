@@ -168,7 +168,7 @@
                     let msg = `*NOVO PEDIDO - VÓ RAMONA*\n\n*Cliente:* ${form.nome_cliente}\n*ITENS:*\n`;
                     carrinho.value.forEach(i => { msg += `• ${i.quantidade}x ${i.nome} - R$ ${(i.preco_total * i.quantidade).toFixed(2)}\n`; });
                     msg += `\n*TOTAL: R$ ${totalPedido.value.toFixed(2)}*\n*PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
-                    window.open(`https://wa.me/556799881895?text=${encodeURIComponent(msg)}`, '_blank');
+                    window.open(`https://wa.me/5567991044105?text=${encodeURIComponent(msg)}`, '_blank');
                 };
 
                 return { getUrl, config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, mascararTelefone, finalizarPedidoZap };
