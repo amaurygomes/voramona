@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vó Ramona | Menu</title>
+    <title>Vó Ramona | Menu Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script type="module">
@@ -11,61 +11,60 @@
         window.DirectusSDK = { createDirectus, rest, readItems, createItem };
     </script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#ff9800', dark: '#1a1a1a', light: '#F3F4F6' } } } }
+        tailwind.config = { theme: { extend: { colors: { primary: '#ff9800', dark: '#1a1a1a', light: '#FDFCF9' } } } }
     </script>
     <style>
         [v-cloak] { display: none; }
-        .img-premium { object-fit: cover; width: 100px; height: 100px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .pill-active { background-color: #ff9800; color: white; }
-        .slide-container { position: relative; height: 180px; overflow: hidden; border-radius: 2rem; }
+        body { background-color: #F8F9FA; color: #333; }
+        .img-premium { object-fit: cover; width: 110px; height: 110px; border-radius: 50%; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .pill-active { background-color: #ff9800; color: white; box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
+        .slide-container { position: relative; height: 200px; overflow: hidden; border-radius: 2.5rem; }
         .slide-item { position: absolute; inset: 0; transition: opacity 1s ease; opacity: 0; }
         .slide-item.active { opacity: 1; }
-        .item-esgotado { filter: grayscale(1); opacity: 0.5; }
+        .item-card { border-radius: 2.2rem; transition: all 0.3s ease; }
+        .item-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
     </style>
 </head>
-<body class="bg-light text-gray-800 font-sans min-h-screen">
+<body class="font-sans">
     <div id="app" v-cloak>
         
-        <header class="p-6 flex justify-between items-center">
+        <header class="p-6 flex justify-between items-center bg-transparent">
             <div class="flex items-center gap-3">
                 <img v-if="config.logo" :src="`https://painel.voramona.com.br/assets/${config.logo}`" class="w-12 h-12 rounded-full shadow-md">
-                <h1 class="text-xl font-black text-gray-900 uppercase italic tracking-tighter">Vó Ramona</h1>
+                <div v-else class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-black">VR</div>
+                <h1 class="text-2xl font-black text-gray-900 italic tracking-tighter">Vó Ramona</h1>
             </div>
             <button @click="verCarrinho = true" class="relative bg-white p-3 rounded-2xl shadow-sm border border-gray-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-width="2"/></svg>
-                <span v-if="carrinho.length" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">{{ totalItens }}</span>
+                <span v-if="carrinho.length" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">{{ totalItens }}</span>
             </button>
         </header>
 
-        <main class="max-w-xl mx-auto px-6 pb-32">
-            
-            <div v-if="banners.length" class="slide-container mb-8 shadow-lg">
+        <main class="max-w-xl mx-auto px-6 pb-40">
+            <div v-if="banners.length" class="slide-container mb-10 shadow-xl border-4 border-white">
                 <div v-for="(imgId, idx) in banners" :key="idx" :class="['slide-item', { active: currentSlide === idx }]">
-                    <img :src="`https://painel.voramona.com.br/assets/${imgId}?fit=cover&width=500&height=200`" class="w-full h-full object-cover">
+                    <img :src="`https://painel.voramona.com.br/assets/${imgId}?fit=cover&width=600&height=300`" class="w-full h-full object-cover">
                 </div>
             </div>
 
-            <div class="flex gap-3 mb-8 overflow-x-auto pb-2">
-                <button @click="tab = 'batatas'" :class="tab === 'batatas' ? 'pill-active shadow-orange-200' : 'bg-white text-gray-400'" class="px-8 py-3 rounded-full font-bold transition-all shadow-sm whitespace-nowrap">🍟 Batatas</button>
-                <button @click="tab = 'bebidas'" :class="tab === 'bebidas' ? 'pill-active shadow-orange-200' : 'bg-white text-gray-400'" class="px-8 py-3 rounded-full font-bold transition-all shadow-sm whitespace-nowrap">🥤 Bebidas</button>
+            <div class="flex gap-3 mb-10 overflow-x-auto no-scrollbar">
+                <button @click="tab = 'batatas'" :class="tab === 'batatas' ? 'pill-active' : 'bg-white text-gray-400'" class="px-8 py-3.5 rounded-full font-bold transition-all shadow-sm whitespace-nowrap italic">🍟 Batatas</button>
+                <button @click="tab = 'bebidas'" :class="tab === 'bebidas' ? 'pill-active' : 'bg-white text-gray-400'" class="px-8 py-3.5 rounded-full font-bold transition-all shadow-sm whitespace-nowrap italic">🥤 Bebidas</button>
             </div>
 
-            <div class="grid gap-4 text-left">
+            <div class="grid gap-6">
                 <template v-if="tab === 'batatas'">
                     <div v-for="b in menu.batatas" :key="b.id" v-show="b.ativo">
-                        <div :class="['bg-white p-4 rounded-[2rem] flex gap-4 shadow-sm border border-gray-50 transition-all', b.esgotado ? 'item-esgotado' : '']">
-                            <img :src="`https://painel.voramona.com.br/assets/${b.imagem}?width=150&height=150`" class="img-premium">
-                            <div class="flex-1 flex flex-col justify-between py-1">
+                        <div class="item-card bg-white p-5 flex gap-5 shadow-sm border border-gray-50 relative overflow-hidden" :class="{'opacity-50 grayscale': b.esgotado}">
+                            <img :src="`https://painel.voramona.com.br/assets/${b.imagem}?width=200`" class="img-premium">
+                            <div class="flex-1 flex flex-col justify-between py-1 text-left">
                                 <div>
                                     <h3 class="font-bold text-gray-900 text-lg leading-tight">{{ b.Nome }}</h3>
-                                    <p class="text-[11px] text-gray-400 mt-1 line-clamp-2 italic">{{ b.descricao }}</p>
+                                    <p class="text-[11px] text-gray-400 mt-2 line-clamp-2 leading-relaxed italic">{{ b.descricao }}</p>
                                 </div>
-                                <div class="flex justify-between items-center mt-3">
-                                    <div class="flex flex-col">
-                                        <span v-if="b.promocao" class="text-[10px] text-gray-400 line-through">R$ {{ b.preco }}</span>
-                                        <span class="text-xl font-black text-gray-900 tracking-tighter">R$ {{ b.promocao || b.preco }}</span>
-                                    </div>
-                                    <button @click="abrirModal(b)" :disabled="b.esgotado" class="bg-primary text-white p-2 rounded-xl shadow-md active:scale-90 transition-all">
+                                <div class="flex justify-between items-center mt-4">
+                                    <span class="text-xl font-black text-gray-900 tracking-tighter italic">R$ {{ b.promocao || b.preco }}</span>
+                                    <button @click="abrirModal(b)" :disabled="b.esgotado" class="bg-primary text-white p-2.5 rounded-2xl shadow-lg active:scale-90 transition-all">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"/></svg>
                                     </button>
                                 </div>
@@ -76,74 +75,80 @@
 
                 <template v-if="tab === 'bebidas'">
                     <div v-for="beb in menu.bebidas" :key="beb.id" v-show="beb.ativo">
-                        <div :class="['bg-white p-4 rounded-3xl flex items-center gap-4 shadow-sm', beb.esgotado ? 'item-esgotado' : '']">
-                            <img :src="`https://painel.voramona.com.br/assets/${beb.imagem}?width=100`" class="w-16 h-16 rounded-2xl object-cover shadow-sm">
-                            <div class="flex-1">
-                                <h3 class="font-bold text-gray-900">{{ beb.nome }}</h3>
-                                <span class="text-primary font-black">R$ {{ beb.promocao || beb.preco }}</span>
+                        <div class="item-card bg-white p-5 flex items-center gap-5 shadow-sm border border-gray-50" :class="{'opacity-50 grayscale': beb.esgotado}">
+                            <img :src="`https://painel.voramona.com.br/assets/${beb.imagem}?width=100`" class="w-16 h-16 rounded-3xl object-cover shadow-md">
+                            <div class="flex-1 text-left">
+                                <h3 class="font-bold text-gray-900 text-base uppercase italic leading-none">{{ beb.nome }}</h3>
+                                <span class="text-primary font-black text-lg italic mt-1 block">R$ {{ beb.promocao || beb.preco }}</span>
                             </div>
-                            <button @click="addBebida(beb)" class="bg-gray-100 text-gray-800 w-10 h-10 rounded-xl font-black text-xl">+</button>
+                            <button @click="addBebida(beb)" :disabled="beb.esgotado" class="bg-gray-100 text-gray-800 w-11 h-11 rounded-2xl font-black text-2xl active:scale-90">+</button>
                         </div>
                     </div>
                 </template>
             </div>
         </main>
 
-        <footer class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md p-4 z-40 flex justify-center gap-16 border-t border-gray-100">
-            <a v-if="config.instagram" :href="config.instagram" target="_blank" class="text-gray-400 active:text-primary"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-            <a v-if="config.whatsapp" :href="`https://wa.me/55${config.whatsapp}`" target="_blank" class="text-gray-400 active:text-primary"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.891 11.893-11.891 3.181 0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.481 8.417 0 6.556-5.333 11.892-11.893 11.892-1.997 0-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.516.899 3.197 1.374 4.918 1.374 5.4 0 9.794-4.395 9.794-9.796 0-2.617-1.02-5.077-2.871-6.928s-4.312-2.87-6.932-2.87c-5.4 0-9.794 4.395-9.794 9.796 0 1.753.47 3.46 1.36 4.974l-.101.161-1.116 4.075 4.178-1.095.163-.1z"/></svg></a>
+        <footer class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl p-6 z-40 flex justify-center gap-16 border-t border-gray-100 rounded-t-[3rem] shadow-2xl">
+            <a v-if="config.instagram" :href="config.instagram" target="_blank" class="text-gray-400 hover:text-primary transition-all flex flex-col items-center gap-1">
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span class="text-[9px] font-black uppercase tracking-widest italic">Instagram</span>
+            </a>
+            <a v-if="config.whatsapp" :href="`https://wa.me/55${config.whatsapp}`" target="_blank" class="text-gray-400 hover:text-green-500 transition-all flex flex-col items-center gap-1">
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.891 11.893-11.891 3.181 0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.481 8.417 0 6.556-5.333 11.892-11.893 11.892-1.997 0-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.516.899 3.197 1.374 4.918 1.374 5.4 0 9.794-4.395 9.794-9.796 0-2.617-1.02-5.077-2.871-6.928s-4.312-2.87-6.932-2.87c-5.4 0-9.794 4.395-9.794 9.796 0 1.753.47 3.46 1.36 4.974l-.101.161-1.116 4.075 4.178-1.095.163-.1z"/></svg>
+                <span class="text-[9px] font-black uppercase tracking-widest italic">WhatsApp</span>
+            </a>
         </footer>
 
-        <div v-if="modalAberto" class="fixed inset-0 bg-accent/30 backdrop-blur-md z-[110] flex items-end justify-center">
-            <div class="bg-white w-full max-w-lg rounded-t-[3.5rem] p-10 shadow-2xl text-left">
-                <div class="flex justify-between items-start mb-6">
+        <div v-if="modalAberto" class="fixed inset-0 bg-gray-900/40 backdrop-blur-md z-[110] flex items-end justify-center">
+            <div class="bg-white w-full max-w-lg rounded-t-[4rem] p-10 shadow-2xl text-left">
+                <div class="flex justify-between items-start mb-8">
                     <h2 class="text-3xl font-black text-gray-900 tracking-tighter italic leading-none">{{ itemAtual?.Nome }}</h2>
                     <button @click="modalAberto = false" class="bg-gray-100 p-2 rounded-full text-gray-400">&times;</button>
                 </div>
                 <div class="flex items-center justify-between bg-gray-50 p-6 rounded-3xl mb-8">
-                    <span class="text-xs font-bold uppercase text-gray-400">Quantidade</span>
+                    <span class="text-xs font-bold uppercase text-gray-400 italic">Quantidade</span>
                     <div class="flex items-center gap-6">
-                        <button @click="qtdTemp > 1 && qtdTemp--" class="w-10 h-10 bg-white rounded-xl shadow-sm font-black text-primary border border-gray-100">-</button>
-                        <span class="font-black text-2xl text-gray-900">{{ qtdTemp }}</span>
-                        <button @click="qtdTemp++" class="w-10 h-10 bg-white rounded-xl shadow-sm font-black text-primary border border-gray-100">+</button>
+                        <button @click="qtdTemp > 1 && qtdTemp--" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-primary border border-gray-100 text-2xl">-</button>
+                        <span class="font-black text-3xl text-gray-900">{{ qtdTemp }}</span>
+                        <button @click="qtdTemp++" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-primary border border-gray-100 text-2xl">+</button>
                     </div>
                 </div>
-                <div class="space-y-2 max-h-[30vh] overflow-y-auto mb-8 pr-2">
+                <div class="space-y-2 max-h-[30vh] overflow-y-auto mb-10 pr-2">
                     <div v-for="add in menu.adicionais" :key="add.id">
-                        <label v-if="add.ativo" class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl transition-all" :class="adicionaisSelecionados.includes(add.id) ? 'ring-2 ring-primary' : ''">
+                        <label v-if="add.ativo" class="flex items-center justify-between p-4 bg-gray-50 rounded-3xl transition-all" :class="adicionaisSelecionados.includes(add.id) ? 'ring-2 ring-primary' : ''">
                             <div class="flex items-center gap-3">
-                                <input type="checkbox" :value="add.id" v-model="adicionaisSelecionados" class="h-5 w-5 accent-primary rounded-full">
+                                <input type="checkbox" :value="add.id" v-model="adicionaisSelecionados" class="w-6 h-6 accent-primary">
                                 <span class="font-bold text-gray-700 text-xs uppercase">{{ add.nome }}</span>
                             </div>
-                            <span class="font-black text-primary text-xs">+ R$ {{ add.preco }}</span>
+                            <span class="font-black text-primary text-sm">+ R$ {{ add.preco }}</span>
                         </label>
                     </div>
                 </div>
-                <button @click="confirmarItem" class="w-full bg-primary text-white font-black py-6 rounded-[2rem] text-lg shadow-lg active:scale-95 transition-all">Adicionar à Sacola</button>
+                <button @click="confirmarItem" class="w-full bg-primary text-white font-black py-6 rounded-[2.5rem] text-xl shadow-xl shadow-orange-100 active:scale-95 transition-all italic">Confirmar e Adicionar</button>
             </div>
         </div>
 
         <div v-if="verCarrinho" class="fixed inset-0 z-[120] flex justify-end">
-            <div class="absolute inset-0 bg-accent/20 backdrop-blur-sm" @click="verCarrinho = false"></div>
-            <div class="relative w-full max-w-md bg-white p-8 overflow-y-auto shadow-2xl flex flex-col">
+            <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm" @click="verCarrinho = false"></div>
+            <div class="relative w-full max-w-md bg-white p-8 overflow-y-auto shadow-2xl flex flex-col rounded-l-[3rem]">
                 <h2 class="text-3xl font-black text-gray-900 italic tracking-tighter mb-10">Sua Sacola</h2>
                 <div class="flex-1 space-y-4">
-                    <div v-for="(item, index) in carrinho" :key="index" class="bg-gray-50 p-5 rounded-[2rem] relative text-left">
-                        <button @click="removerItem(index)" class="absolute top-4 right-4 text-gray-300 hover:text-red-500 font-bold">Remover</button>
+                    <div v-for="(item, index) in carrinho" :key="index" class="bg-gray-50 p-6 rounded-[2.5rem] relative text-left">
+                        <button @click="removerItem(index)" class="absolute top-4 right-4 text-gray-300 font-bold text-xs uppercase">Remover</button>
                         <p class="text-[10px] font-black text-primary uppercase mb-1">{{ item.quantidade }}x Unidade(s)</p>
                         <h3 class="font-bold text-gray-900 text-lg leading-tight">{{ item.nome }}</h3>
-                        <p class="text-[10px] text-gray-400 mt-2 italic leading-tight">{{ item.detalhes }}</p>
-                        <p class="font-black text-gray-900 mt-4">R$ {{ (item.preco_total * item.quantidade).toFixed(2) }}</p>
+                        <p class="text-[10px] text-gray-400 mt-2 italic">{{ item.detalhes }}</p>
+                        <p class="font-black text-gray-900 mt-4 text-lg italic">R$ {{ (item.preco_total * item.quantidade).toFixed(2) }}</p>
                     </div>
                 </div>
                 <div v-if="carrinho.length" class="mt-8 space-y-4 border-t border-gray-100 pt-8 text-left">
-                    <input type="text" v-model="form.Cliente" placeholder="WhatsApp" class="w-full bg-gray-50 p-5 rounded-2xl outline-none focus:ring-1 ring-primary border border-gray-100">
-                    <textarea v-model="form.endereco" rows="2" placeholder="Endereço de Entrega" class="w-full bg-gray-50 p-5 rounded-2xl outline-none focus:ring-1 ring-primary border border-gray-100"></textarea>
+                    <input type="text" v-model="form.Cliente" placeholder="WhatsApp (DDD + Número)" class="w-full bg-gray-50 p-5 rounded-2xl border border-gray-100 outline-none focus:ring-1 ring-primary">
+                    <textarea v-model="form.endereco" rows="2" placeholder="Endereço de Entrega" class="w-full bg-gray-50 p-5 rounded-2xl border border-gray-100 outline-none focus:ring-1 ring-primary"></textarea>
                     <div class="flex justify-between items-center mb-6 pt-4">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Total Geral</span>
-                        <span class="text-3xl font-black text-gray-900 tracking-tighter italic leading-none">R$ {{ totalPedido.toFixed(2) }}</span>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Subtotal</span>
+                        <span class="text-4xl font-black text-gray-900 tracking-tighter leading-none italic">R$ {{ totalPedido.toFixed(2) }}</span>
                     </div>
-                    <button @click="finalizarPedido" :disabled="!form.Cliente || !form.endereco || enviando" class="w-full bg-dark text-white font-black py-6 rounded-[2rem] text-xl shadow-xl disabled:opacity-20 active:scale-95 transition-all">Fechar Pedido</button>
+                    <button @click="finalizarPedido" :disabled="!form.Cliente || !form.endereco || enviando" class="w-full bg-gray-900 text-white font-black py-6 rounded-[2.5rem] text-xl shadow-xl disabled:opacity-20 active:scale-95 transition-all italic">Fechar Pedido</button>
                 </div>
             </div>
         </div>
@@ -156,7 +161,7 @@
             setup() {
                 const tab = ref('batatas'); const modalAberto = ref(false); const verCarrinho = ref(false); const enviando = ref(false);
                 const currentSlide = ref(0); const banners = ref([]); const qtdTemp = ref(1);
-                const config = reactive({ logo: null, instagram: '', whatsapp: '', horario_inicio: '', horario_fim: '' });
+                const config = reactive({ logo: null, instagram: '', whatsapp: '', facebook: '', horario_inicio: '', horario_fim: '' });
                 const menu = reactive({ batatas: [], bebidas: [], adicionais: [] });
                 const carrinho = ref([]); const itemAtual = ref(null); const adicionaisSelecionados = ref([]);
                 const form = reactive({ Cliente: '', endereco: '', pagamento: 'pix', troco: false, troco_para: '' });
@@ -175,16 +180,16 @@
                             client.request(sdk.readItems('adicionais')), client.request(sdk.readItems('configuracao')),
                             client.request(sdk.readItems('banner'))
                         ]);
-                        menu.batatas = batatas; menu.bebidas = bebidas; menu.adicionais = adicionais;
+                        menu.batatas = batatas || []; menu.bebidas = bebidas || []; menu.adicionais = adicionais || [];
                         if(settings.length) Object.assign(config, settings[settings.length-1]);
                         if(bnr.length) {
-                            const b = bnr[0];
-                            banners.value = [b.imagem_1, b.imagen_2, b.imagem_3].filter(id => id);
+                            banners.value = [bnr[0].imagem_1, bnr[0].imagen_2, bnr[0].imagem_3].filter(id => id);
                         }
                     } catch (e) { console.error(e); }
                 });
 
                 const abrirModal = (b) => { itemAtual.value = b; adicionaisSelecionados.value = []; qtdTemp.value = 1; modalAberto.value = true; };
+                
                 const confirmarItem = () => {
                     const extras = menu.adicionais.filter(a => adicionaisSelecionados.value.includes(a.id));
                     const pAdd = extras.reduce((acc, a) => acc + parseFloat(a.preco || 0), 0);
@@ -196,7 +201,12 @@
                     });
                     modalAberto.value = false;
                 };
-                const addBebida = (b) => { const p = parseFloat(b.promocao || b.preco || 0); carrinho.value.push({ id: b.id, nome: b.nome, quantidade: 1, preco_total: p, detalhes: 'Gelada' }); };
+
+                const addBebida = (b) => { 
+                    const p = parseFloat(b.promocao || b.preco || 0); 
+                    carrinho.value.push({ id: b.id, nome: b.nome, quantidade: 1, preco_total: p, detalhes: 'Gelada' }); 
+                };
+
                 const removerItem = (i) => carrinho.value.splice(i, 1);
 
                 const finalizarPedido = async () => {
@@ -209,11 +219,11 @@
                             bebidas: carrinho.value.filter(i => !i.adicionais_ids).map(b => ({ bebida_id: b.id, quantidade: b.quantidade }))
                         };
                         await sdk.createDirectus('https://painel.voramona.com.br').with(sdk.rest()).request(sdk.createItem('pedidos', payload));
-                        alert('✅ Vó Ramona recebeu o seu pedido!'); location.reload();
+                        alert('✅ Vó Ramona recebeu o pedido!'); location.reload();
                     } catch (e) { alert('Erro ao enviar.'); console.error(e); } finally { enviando.value = false; }
                 };
 
-                return { config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, finalizarPedido };
+                return { config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, finalizarPedido };
             }
         }).mount('#app');
     </script>
