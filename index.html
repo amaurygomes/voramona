@@ -150,9 +150,18 @@
                 <div class="flex-1 space-y-4 no-scrollbar">
                     <div v-for="(item, index) in carrinho" :key="index" class="bg-gray-50 p-6 rounded-[2.5rem] relative text-left border border-gray-100 shadow-sm">
                         <button @click="removerItem(index)" class="absolute top-4 right-4 text-gray-300 font-bold text-[10px] uppercase">Remover</button>
-                        <p class="text-[10px] font-black text-primary uppercase mb-1">{{ item.quantidade }}x Unidade(s)</p>
-                        <h3 class="font-bold text-gray-900 text-lg leading-tight italic">{{ item.nome }}</h3>
-                        <p class="text-[10px] text-gray-400 mt-2 italic">{{ item.detalhes }}</p>
+                        
+                        <div class="flex justify-between items-start mt-2">
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-lg leading-tight italic">{{ item.nome }}</h3>
+                                <p class="text-[10px] text-gray-400 mt-1 italic">{{ item.detalhes }}</p>
+                            </div>
+                            <div class="flex items-center gap-3 bg-white px-3 py-1.5 rounded-2xl border border-gray-100">
+                                <button @click="alterarQtdSacola(index, -1)" class="text-primary font-black text-lg">-</button>
+                                <span class="text-sm font-black text-gray-900">{{ item.quantidade }}</span>
+                                <button @click="alterarQtdSacola(index, 1)" class="text-primary font-black text-lg">+</button>
+                            </div>
+                        </div>
                         <p class="font-black text-gray-900 mt-4 text-lg italic">R$ {{ (item.preco_total * item.quantidade).toFixed(2) }}</p>
                     </div>
                 </div>
@@ -238,14 +247,51 @@
                 });
 
                 const abrirModal = (b) => { itemAtual.value = b; adicionaisSelecionados.value = []; qtdTemp.value = 1; modalAberto.value = true; };
+                
                 const confirmarItem = () => {
                     const extras = menu.adicionais.filter(a => adicionaisSelecionados.value.includes(a.id));
+                    const detalhesString = extras.map(e => e.nome).sort().join(', ') || 'Tradicional';
                     const pAdd = extras.reduce((acc, a) => acc + parseFloat(a.preco || 0), 0);
                     const pBase = parseFloat(itemAtual.value.promocao || itemAtual.value.preco || 0);
-                    carrinho.value.push({ id: itemAtual.value.id, nome: itemAtual.value.Nome, quantidade: qtdTemp.value, preco_total: pBase + pAdd, detalhes: extras.map(e => e.nome).join(', ') || 'Tradicional' });
+                    const precoUnitario = pBase + pAdd;
+
+                    const itemExistente = carrinho.value.find(i => i.id === itemAtual.value.id && i.detalhes === detalhesString);
+
+                    if (itemExistente) {
+                        itemExistente.quantidade += qtdTemp.value;
+                    } else {
+                        carrinho.value.push({ 
+                            id: itemAtual.value.id, 
+                            nome: itemAtual.value.Nome, 
+                            quantidade: qtdTemp.value, 
+                            preco_total: precoUnitario, 
+                            detalhes: detalhesString 
+                        });
+                    }
                     modalAberto.value = false;
                 };
-                const addBebida = (b) => { carrinho.value.push({ id: b.id, nome: b.nome, quantidade: 1, preco_total: parseFloat(b.promocao || b.preco || 0), detalhes: 'Gelada' }); };
+
+                const addBebida = (b) => {
+                    const itemExistente = carrinho.value.find(i => i.id === b.id && i.detalhes === 'Gelada');
+                    if (itemExistente) {
+                        itemExistente.quantidade += 1;
+                    } else {
+                        carrinho.value.push({ 
+                            id: b.id, 
+                            nome: b.nome, 
+                            quantidade: 1, 
+                            preco_total: parseFloat(b.promocao || b.preco || 0), 
+                            detalhes: 'Gelada' 
+                        });
+                    }
+                };
+
+                const alterarQtdSacola = (index, delta) => {
+                    const item = carrinho.value[index];
+                    item.quantidade += delta;
+                    if (item.quantidade <= 0) removerItem(index);
+                };
+
                 const removerItem = (i) => carrinho.value.splice(i, 1);
 
                 const finalizarPedidoZap = () => {
@@ -269,6 +315,7 @@
                     msg += `🚚 *Taxa de Entrega:* R$ ${taxaEntregaMinima.toFixed(2)} (A combinar 🤝)\n`;
                     msg += `⭐ *TOTAL ESTIMADO: R$ ${totalComTaxa.toFixed(2)}*\n`;
                     msg += `------------------------------\n\n`;
+
                     
                     msg += `💳 *PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
                     
@@ -278,11 +325,11 @@
 
                     msg += `\n\n⚠️ _Aguarde a confirmação para validar o valor da entrega._`;
 
-                    const url = `https://wa.me/556799881895?text=${encodeURIComponent(msg)}`;
+                    const url = `https://wa.me/55${numeroLoja}?text=${encodeURIComponent(msg)}`;
                     window.open(url, '_blank');
                 };
                 
-                return { getUrl, formatDesc, config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, mascararTelefone, finalizarPedidoZap };
+                return { getUrl, formatDesc, config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, alterarQtdSacola, removerItem, mascararTelefone, finalizarPedidoZap };
             }
         }).mount('#app');
     </script>
