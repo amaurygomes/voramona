@@ -268,7 +268,7 @@
     msg += `*TOTAL ESTIMADO: R$ ${totalComTaxa.toFixed(2)}*\n`;
     msg += `------------------------------\n\n`; // Adicionei uma linha extra aqui
 
-    msg += `*ENTREGA:* ${form.endereco}\n`; // Adicionado \n para pular linha
+    msg += `*ENDEREÇO:* ${form.endereco}\n`; // Adicionado \n para pular linha
     msg += `*PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
     
     if(form.troco && form.pagamento === 'dinheiro') {
