@@ -245,22 +245,37 @@
                 const removerItem = (i) => carrinho.value.splice(i, 1);
 
                 const finalizarPedidoZap = () => {
-                    const numeroLoja = "6799881895"; 
-                    let msg = `*NOVO PEDIDO - VÓ RAMONA*\n\n`;
-                    msg += `*Cliente:* ${form.nome_cliente}\n`;
-                    msg += `*WhatsApp:* ${form.whatsapp_cliente}\n\n`;
-                    msg += `*ITENS DO PEDIDO:*\n`;
-                    carrinho.value.forEach(i => {
-                        msg += `• ${i.quantidade}x ${i.nome}\n  (_${i.detalhes}_) - R$ ${(i.preco_total * i.quantidade).toFixed(2)}\n`;
-                    });
-                    msg += `\n*TOTAL: R$ ${totalPedido.value.toFixed(2)}*`;
-                    msg += `\n\n*ENTREGA:* ${form.endereco}`;
-                    msg += `\n*PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
-                    if(form.troco && form.pagamento === 'dinheiro') msg += `\n*TROCO PARA:* R$ ${form.troco_para}`;
+    const numeroLoja = "6799881895"; 
+    const taxaEntregaMinima = 7.00; // Valor da taxa mínima definido aqui
+    
+    // Cálculo do total somando a taxa mínima
+    const totalComTaxa = totalPedido.value + taxaEntregaMinima;
 
-                    const url = `https://wa.me/55${numeroLoja}?text=${encodeURIComponent(msg)}`;
-                    window.open(url, '_blank');
-                };
+    let msg = `*NOVO PEDIDO - VÓ RAMONA*\n\n`;
+    msg += `*Cliente:* ${form.nome_cliente}\n`;
+    msg += `*WhatsApp:* ${form.whatsapp_cliente}\n\n`;
+    
+    msg += `*ITENS DO PEDIDO:*\n`;
+    carrinho.value.forEach(i => {
+        msg += `• ${i.quantidade}x ${i.nome}\n  (_${i.detalhes}_) - R$ ${(i.preco_total * i.quantidade).toFixed(2)}\n`;
+    });
+
+    msg += `\n------------------------------\n`;
+    msg += `*Subtotal:* R$ ${totalPedido.value.toFixed(2)}\n`;
+    msg += `*Taxa de Entrega:* R$ ${taxaEntregaMinima.toFixed(2)} (Mínima / A combinar)\n`;
+    msg += `*TOTAL ESTIMADO: R$ ${totalComTaxa.toFixed(2)}*\n`;
+    msg += `------------------------------\n`;
+
+    msg += `\n*ENTREGA:* ${form.endereco}`;
+    msg += `*PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
+    
+    if(form.troco && form.pagamento === 'dinheiro') {
+        msg += `\n*TROCO PARA:* R$ ${form.troco_para}`;
+    }
+
+    const url = `https://wa.me/55${numeroLoja}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+};
 
                 return { getUrl, formatDesc, config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, mascararTelefone, finalizarPedidoZap };
             }
