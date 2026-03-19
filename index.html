@@ -256,6 +256,7 @@
                     let msg = `*🛵 NOVO PEDIDO - VÓ RAMONA* \n\n`;
                     msg += `👤 *Cliente:* ${form.nome_cliente}\n`;
                     msg += `📱 *WhatsApp:* ${form.whatsapp_cliente}\n\n`;
+                    msg += `📍 *ENDEREÇO:* ${form.endereco}\n\n`;
                     
                     msg += `🛒 *ITENS DO PEDIDO:*\n`;
                     carrinho.value.forEach(i => {
@@ -268,8 +269,7 @@
                     msg += `🚚 *Taxa de Entrega:* R$ ${taxaEntregaMinima.toFixed(2)} (A combinar 🤝)\n`;
                     msg += `⭐ *TOTAL ESTIMADO: R$ ${totalComTaxa.toFixed(2)}*\n`;
                     msg += `------------------------------\n\n`;
-
-                    msg += `📍 *ENDEREÇO:* ${form.endereco}\n\n`;
+                    
                     msg += `💳 *PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
                     
                     if(form.troco && form.pagamento === 'dinheiro') {
