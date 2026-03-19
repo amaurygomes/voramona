@@ -244,11 +244,13 @@
                 const addBebida = (b) => { carrinho.value.push({ id: b.id, nome: b.nome, quantidade: 1, preco_total: parseFloat(b.promocao || b.preco || 0), detalhes: 'Gelada' }); };
                 const removerItem = (i) => carrinho.value.splice(i, 1);
 
+
+
+
                 const finalizarPedidoZap = () => {
     const numeroLoja = "6799881895"; 
-    const taxaEntregaMinima = 7.00; // Valor da taxa mínima definido aqui
+    const taxaEntregaMinima = 7.00;
     
-    // Cálculo do total somando a taxa mínima
     const totalComTaxa = totalPedido.value + taxaEntregaMinima;
 
     let msg = `*NOVO PEDIDO - VÓ RAMONA*\n\n`;
@@ -264,9 +266,9 @@
     msg += `*Subtotal:* R$ ${totalPedido.value.toFixed(2)}\n`;
     msg += `*Taxa de Entrega:* R$ ${taxaEntregaMinima.toFixed(2)} (Mínima / A combinar)\n`;
     msg += `*TOTAL ESTIMADO: R$ ${totalComTaxa.toFixed(2)}*\n`;
-    msg += `------------------------------\n`;
+    msg += `------------------------------\n\n`; // Adicionei uma linha extra aqui
 
-    msg += `\n*ENTREGA:* ${form.endereco}`;
+    msg += `*ENTREGA:* ${form.endereco}\n`; // Adicionado \n para pular linha
     msg += `*PAGAMENTO:* ${form.pagamento.toUpperCase()}`;
     
     if(form.troco && form.pagamento === 'dinheiro') {
@@ -277,6 +279,11 @@
     window.open(url, '_blank');
 };
 
+
+                
+
+                
+                
                 return { getUrl, formatDesc, config, tab, banners, currentSlide, modalAberto, verCarrinho, menu, carrinho, itemAtual, adicionaisSelecionados, totalPedido, totalItens, form, qtdTemp, abrirModal, confirmarItem, addBebida, removerItem, mascararTelefone, finalizarPedidoZap };
             }
         }).mount('#app');
